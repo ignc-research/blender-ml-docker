@@ -15,16 +15,16 @@ COPY app/src/ .
 
 # command to run on container start
 
-RUN python -u listen_for_json.py
-#RUN python -u listen_for_3dfile.py
+RUN python -u get_files.py
+
 
 
 FROM nytimes/blender:latest AS blender
 COPY ./blender-gen-container /workspace/blender_gen_TUBerlin
 WORKDIR /workspace/blender_gen_TUBerlin
 COPY --from=client /code/parameters.json .
-#TODO: Also COPY for 3D File
-#TODO: Convert JSON to config class
+COPY --from=client /code/object.ply ./models
+
 RUN blender --background --python main.py
 
 FROM pytorch/pytorch:latest
