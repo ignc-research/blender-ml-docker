@@ -3,6 +3,23 @@ import shutil
 import time
 import json
 
+print('Trying to connect to server...')
+while True:
+    try:
+        r = requests.post('http://127.0.0.1:3001/log', data = {'msg': 'Establishing Connection!'})
+        if r.status_code == 200:
+            print('Connection established!')
+            break
+        else:
+            time.sleep(1)
+            pass
+    except Exception as e:
+        print('Unable to establish connection to server! Please see error message below for more details.')
+        print(e)
+        time.sleep(5)
+        pass
+
+
 r1 = requests.get('http://127.0.0.1:3001/send3d', stream=True)
 if r1.status_code == 200:
     with open('object.ply', 'wb') as f:
