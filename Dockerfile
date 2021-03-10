@@ -13,7 +13,7 @@ RUN pip install -r requirements.txt
 # copy the content of the local src directory to the working directory
 COPY app/src/ .
 
-# command to run on container start
+# python file to connect to node server and collect 3D Object file and camera data file
 
 RUN python -u get_files.py
 
@@ -39,5 +39,7 @@ COPY --from=blender /workspace/blender_gen_TUBerlin/cfg ./cfg
 COPY --from=blender /workspace/blender_gen_TUBerlin/config.py .
 COPY --from=blender /workspace/blender_gen_TUBerlin/models/object.ply ./DATASET/object
 
+RUN python3 create_meta_data.py
+ENTRYPOINT [ "python3", "blender_train.py", "cfg/object.data", "yolo-pose.cfg", "backup/init.weights" ]
 #ENTRYPOINT ["python3", "train.py"]
 #RUN python3 blender_train.py blender_3dbox.data yolo-pose.cfg backup/init.weights
