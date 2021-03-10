@@ -19,7 +19,22 @@ while True:
         time.sleep(5)
         pass
 
-
+print('Waiting for Data check')
+while True:
+    try:
+        r = requests.get('http://127.0.0.1:3001/datatrigger', stream=True)
+        bool_trigger = r.raw.read(1)
+        if r.status_code == 200:
+            if str(bool_trigger, 'utf-8') == 't':
+                print('All files uploaded!')
+                break
+            else:
+                pass
+    except Exception as e:
+        print(e)
+        time.sleep(5)
+        pass
+    
 r1 = requests.get('http://127.0.0.1:3001/send3d', stream=True)
 if r1.status_code == 200:
     with open('object.ply', 'wb') as f:
