@@ -48,12 +48,13 @@ if r2.status_code == 200:
     parameters = r2.json()
     with open('parameters.json', 'w') as outfile:
         json.dump(parameters, outfile)
+        
 r21 = requests.post('http://127.0.0.1:3001/log', data = {'msg': 'Received Parameter JSON File!'})
 print('Received Parameter JSON File!')
 
-print('Waiting for Start Trigger')
+print('Waiting for Render Trigger')
 while True:
-    r = requests.get('http://127.0.0.1:3001/sendtrigger', stream=True)
+    r = requests.get('http://127.0.0.1:3001/startrender', stream=True)
     bool_trigger = r.raw.read(1)
     if r.status_code == 200:
         if str(bool_trigger, 'utf-8') == 't':
