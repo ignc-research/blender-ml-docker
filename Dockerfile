@@ -1,6 +1,8 @@
 # set base image (host OS)
 FROM python:3.8 AS client
-
+ARG TRAINREPO=./sspe
+ENV TRAINDIR=${TRAINREPO}
+RUN echo ${TRAINDIR}
 # set the working directory in the container
 WORKDIR /code
 
@@ -20,6 +22,7 @@ RUN python -u get_files.py
 
 
 FROM nytimes/blender:latest AS blender
+RUN echo ${TRAINDIR}
 COPY ./blender-gen-container /workspace/blender_gen_TUBerlin
 WORKDIR /workspace/blender_gen_TUBerlin
 COPY --from=client /code/parameters.json .
@@ -30,10 +33,14 @@ RUN pip3 install requests
 RUN blender --background --python main.py
 
 FROM pytorch/pytorch:latest
+ARG TRAINREPO=./sspe
 RUN apt-get update && apt-get install -y libglib2.0-0 libsm6 libxext6 libxrender-dev libgl1-mesa-glx
-RUN pip install opencv-python scipy argparse urllib3 numpy requests
+RUN pip install scipy argparse urllib3 numpy requests opencv-python requests
 
-COPY ./Industrial6DPoseEstimation /workspace/SSPE_TUBerlin
+#COPY ./Industrial6DPoseEstimation /workspace/SSPE_TUBerlin
+RUN echo ${TRAINDIR}
+RUN echo ${TRAINREPO}
+COPY ${TRAINREPO} /workspace/SSPE_TUBerlin
 #RUN TRAINDIR=$(cat /root/tmp_var); 
 #COPY ./${TRAINDIR} /workspace/SSPE_TUBerlin
 WORKDIR /workspace/SSPE_TUBerlin
