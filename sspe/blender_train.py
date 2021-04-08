@@ -24,6 +24,8 @@ from MeshPly import MeshPly
 import warnings
 warnings.filterwarnings("ignore")
 
+import requests
+
 # Create new directory
 def makedirs(path):
     if not os.path.exists( path ):
@@ -414,6 +416,16 @@ if __name__ == "__main__":
 
             logging('training 2 epoch ...')
             logging(epoch)
+            try:
+                print('--------------------in_loop-----------------')
+                r = requests.post('http://127.0.0.1:3001/trainprogress', data={'current': epoch})
+                print('success')
+                #time.sleep(2)
+            except Exception as e:
+                print('failed')
+                print(e)
+                #time.sleep(2)
+                pass
             # TEST and SAVE
             if (epoch % 10 == 0) and (epoch is not 0):
                 test(epoch, niter)
@@ -430,4 +442,18 @@ if __name__ == "__main__":
                     logging('best model so far!')
                     logging('save weights to %s/model.weights' % (backupdir))
                     model.save_weights('%s/model.weights' % (backupdir))
+                    #torch.save(model.state_dict(),"saved_model.pth")
+                    torch.save(model, "saved_model.pth")
+                    while True:
+                        try:
+                            modelfile = {'upload_file': open('saved_model.pth','rb')}
+                            r = requests.post('http://127.0.0.1:3001/uploadmodel', files=modelfile)
+                            print('success')
+                            time.sleep(2)
+                            break
+                        except Exception as e:
+                            print('failed')
+                            print(e)
+                            time.sleep(2)
+                            pass
         shutil.copy2('%s/model.weights' % (backupdir), '%s/model_backup.weights' % (backupdir))
