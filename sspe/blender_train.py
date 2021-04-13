@@ -408,26 +408,42 @@ if __name__ == "__main__":
     else:
         logging('training ...')
         for epoch in range(init_epoch, max_epochs): 
+           
+            try:
+                r = requests.get('http://127.0.0.1:3001/stoptrain', stream=True)
+                bool_trigger = r.raw.read(1)
+                if r.status_code == 200:
+                    if str(bool_trigger, 'utf-8') == 't':
+                        print('Stop Training command received!')
+                        break
+                    else:
+                        pass
+            except Exception as e:
+                print(e)
+                time.sleep(1)
+                pass 
+            
             # TRAIN
             niter = train(epoch)
 
             logging('training 1 niter ...')
             logging(niter)
-
+            #print(float(training_losses[-1]))
             logging('training 2 epoch ...')
             logging(epoch)
-            try:
-                print('--------------------in_loop-----------------')
-                r = requests.post('http://127.0.0.1:3001/trainprogress', data={'current': epoch})
-                print('success')
-                #time.sleep(2)
-            except Exception as e:
-                print('failed')
-                print(e)
-                #time.sleep(2)
-                pass
+
             # TEST and SAVE
             if (epoch % 10 == 0) and (epoch is not 0):
+                try:
+                    print('--------------------in_loop-----------------')
+                    r = requests.post('http://127.0.0.1:3001/trainprogress', data={'episode': epoch, 'loss': float(training_losses[-1])})
+                    print('success')
+                    #time.sleep(2)
+                except Exception as e:
+                    print('failed')
+                    print(e)
+                    #time.sleep(2)
+                    pass
                 test(epoch, niter)
                 logging('save training stats to %s/costs.npz' % (backupdir))
                 np.savez(os.path.join(backupdir, "costs.npz"),

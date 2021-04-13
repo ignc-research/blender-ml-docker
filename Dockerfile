@@ -49,6 +49,7 @@ COPY --from=blender /workspace/blender_gen_TUBerlin/DATASET ./DATASET
 COPY --from=blender /workspace/blender_gen_TUBerlin/cfg ./cfg
 COPY --from=blender /workspace/blender_gen_TUBerlin/config.py .
 COPY --from=blender /workspace/blender_gen_TUBerlin/models/object.ply ./DATASET/object
+COPY --from=client /code/parameters.json .
 
 RUN python3 wait_for_trigger.py
 

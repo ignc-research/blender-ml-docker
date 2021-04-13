@@ -11,6 +11,7 @@ import os
 import json
 import numpy as np
 import config
+import time
 
 
 def main(obj='object'):
@@ -23,6 +24,20 @@ def main(obj='object'):
     n = len(files)  # number of images
     start = 0
     end = round(n * 0.8)  # 80% 20% split
+
+    print('Tagging user Input')
+    try:
+      with open('parameters.json') as f:
+        userInput = json.load(f)
+      print('success')
+      #print(userInput["numberOfRenders"])#, 'train_test_split'])
+      user_end = userInput["train_test_split"]     
+      time.sleep(2)
+    except Exception as e:
+      print(e)
+      time.sleep(10)
+
+    if user_end: end = round(n * user_end)
     
     train_range = np.zeros((end,1), dtype=int)
     
