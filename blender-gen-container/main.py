@@ -603,15 +603,20 @@ def main():
     #cfg = cfg()
     print('Tagging user Input')
     try:
-      with open('parameters.json') as f:
-        userInput = json.load(f)
-      print('success')
-      #print(userInput["numberOfRenders"])#, 'train_test_split'])
-      cfg.numberOfRenders = userInput["numberOfRenders"]
-      time.sleep(2)
+        with open('parameters.json') as f:
+            userInput = json.load(f)
+        print('success')
+        #print(userInput["numberOfRenders"])#, 'train_test_split'])
+        cfg.numberOfRenders = userInput["numberOfRenders"]
+        if userInput["cam_rmin"] !> userInput["cam_rmax"]:
+            if 0.5 < userInput["cam_rmin"] < 2:
+                cfg.cam_rmin = userInput["cam_rmin"]
+            if 1 < userInput["cam_rmax"] < 3:
+                cfg.cam_rmin = userInput["cam_rmax"]
+        time.sleep(2)
     except Exception as e:
-      print(e)
-      time.sleep(10)
+        print(e)
+        time.sleep(10)
 
     ensure_dir(cfg.output_path + '/object/images')
     ensure_dir(cfg.output_path + '/object/labels')
