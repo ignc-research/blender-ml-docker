@@ -1,6 +1,6 @@
 # blender-ml-docker
 ## How to run:
-This docker container can be run in one of two ways. Variant 1 is used when the container needs to be run automatically without user input and Variant 2 can be used for debugging purposes. Regardless of what Variant is used, the container needs both the Frontend (Available at ignc-research/blender-ml-web) and the Node Server to function.
+This docker container can be run in one of two ways. Variant 1 is used when the container needs to be run automatically without user input and Variant 2 can be used for debugging purposes. Regardless of what Variant is used, the container needs both the Frontend (Available at ignc-research/blender-ml-web) and the Node Server (Available at ignc-research/blender-ml-server) to function.
 
 ### Variant 1:
 Use the **start_docker.py** file to build and run the container. The user does not need to do anything further when running this variant.
