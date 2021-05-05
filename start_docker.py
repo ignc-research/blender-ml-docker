@@ -30,8 +30,7 @@ while True:
             time.sleep(1)
             pass
     except Exception as e:
-        print('Unable to establish connection to server! Please see error message below for more details.')
-        print(e)
+        #print(e)
         time.sleep(5)
         pass
 #sudo docker build --network host --no-cache -t train-assist . && 
